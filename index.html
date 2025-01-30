@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | TAUROEMISIONGAME2</title>
@@ -8,41 +8,51 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <style>
         #chat-container {
-            position: absolute; /* Cambiará a fixed en pantalla completa */
-            top: 20px;
-            left: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 10px;
-            border-radius: 5px;
-            width: 300px;
-            z-index: 2147483647; /* Asegura que esté encima */
-            cursor: move;
-            user-select: none;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease; /* Suaviza las transiciones */
-        }
-        #chat-form {
-            display: none;
-        }
-        #chatUl {
-            list-style-type: none;
-            padding: 0;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        #toggleChat {
-            cursor: pointer;
-        }
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    background-color: rgba(255, 255, 255, 0);
+    padding: 10px;
+    border-radius: 5px;
+    width: 300px;
+    z-index: 2147483647;
+    cursor: move;
+    user-select: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0);
+}
+
+#button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#toggleChat, #toggleChatVisibility {
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+#chat-content {
+    display: none;
+    margin-top: 5px;
+}
+
+#chatUl {
+    list-style-type: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+}
     </style>
 </head>
 <body>
-    <!-- Unity Player -->
-    <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas" width="1242" height="975" tabindex="-1"></canvas>
-
-        <!-- Chat -->
-        <div id="chat-container">
-            <button id="toggleChat">Charlar</button>
+    <div id="chat-container">
+    <div id="button-container">
+        <button id="toggleChat">Charlar</button>
+        <button id="toggleChatVisibility">CHATonLINE</button>
+    </div>
+    <div id="chat-content">
             <div id="chat-form">
                 <form action="">
                     <div>
@@ -58,23 +68,24 @@
             </div>
             <ul id="chatUl"></ul>
         </div>
-
-        <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
-            </div>
-        </div>
-        <div id="unity-warning"></div>
-        <div id="unity-footer">
-            <div id="unity-webgl-logo"></div>
-            <div id="unity-fullscreen-button"></div>
-            <div id="unity-build-title">TAUROEMISIONGAME2</div>
-        </div>
     </div>
-
-    <script>
-
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+          <div id="unity-logo"></div>
+          <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+          </div>
+        </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer">
+          <div id="unity-webgl-logo"></div>
+          <div id="unity-fullscreen-button"></div>
+          <div id="unity-build-title">TAUROEMISIONGAME2</div>
+        </div>
+      </div>
+      <script>
+  
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
@@ -168,71 +179,191 @@
         document.body.appendChild(script);
   
       </script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-database-compat.js"></script>
     <script>
-        // Inicializar Firebase
-        const app = firebase.initializeApp({
+        // Configuración de Firebase (mantén tu configuración existente)
+        const firebaseConfig = {
             apiKey: "AIzaSyBsT5gag1QnSkOylpBAywR4HWAkq-GoiJA",
-            authDomain: "tauroemisiongame2.firebaseapp.com",
-            databaseURL: "https://tauroemisiongame2-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "tauroemisiongame2",
-            storageBucket: "tauroemisiongame2.appspot.com",
-            messagingSenderId: "89770445112",
-            appId: "1:89770445112:web:66eadc60fe6d9cf9e299cd"
-        });
+                authDomain: "tauroemisiongame2.firebaseapp.com",
+                databaseURL: "https://tauroemisiongame2-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "tauroemisiongame2",
+                storageBucket: "tauroemisiongame2.appspot.com",
+                messagingSenderId: "89770445112",
+                appId: "1:89770445112:web:66eadc60fe6d9cf9e299cd"
+        };
 
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database(app);
 
-        // DOM Elements
+        // Elementos del DOM
+        const unityContainer = document.getElementById('unity-container');
         const chatContainer = document.getElementById('chat-container');
-        const chatForm = document.getElementById('chat-form');
-        const chatUl = document.getElementById('chatUl');
-        const btnEnviar = document.getElementById("btnEnviar");
         const txtNombre = document.getElementById("nombre");
         const txtMensaje = document.getElementById("mensaje");
+        const btnEnviar = document.getElementById("btnEnviar");
+        const chatUl = document.getElementById("chatUl");
         const toggleChat = document.getElementById('toggleChat');
+        const chatForm = document.getElementById('chat-form');
+        const toggleChatVisibility = document.getElementById('toggleChatVisibility');
+        const chatContent = document.getElementById('chat-content');
 
-        // Mantener el chat visible en modo pantalla completa
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                chatContainer.style.position = 'fixed';
-                chatContainer.style.top = '20px';
-                chatContainer.style.left = '20px';
-            } else {
-                chatContainer.style.position = 'absolute';
-            }
+        toggleChatVisibility.addEventListener('click', function() {
+        if (chatContent.style.display === 'none' || chatContent.style.display === '') {
+        chatContent.style.display = 'block';
+        toggleChatVisibility.textContent = 'OCULTAR';
+        } else {
+        chatContent.style.display = 'none';
+        toggleChatVisibility.textContent = 'CHAT';
+        }
         });
 
-        // Enviar mensajes
-        btnEnviar.addEventListener('click', () => {
-            const nombre = txtNombre.value.trim();
-            const mensaje = txtMensaje.value.trim();
-            if (nombre && mensaje) {
-                database.ref('chat').push({ name: nombre, message: mensaje });
-                txtMensaje.value = ''; // Limpia el campo mensaje
-            } else {
-                alert("Por favor, completa ambos campos.");
-            }
+        // Inicialmente visible
+        window.addEventListener('load', () => {
+        chatContent.style.display = 'block';
+        toggleChatVisibility.textContent = 'OCULTAR';
         });
 
-        // Escuchar mensajes nuevos
-        database.ref('chat').on('value', (snapshot) => {
-            chatUl.innerHTML = '';
-            snapshot.forEach((child) => {
-                const { name, message } = child.val();
-                const li = document.createElement('li');
-                li.innerHTML = `<b>${name}:</b> ${message}`;
-                chatUl.appendChild(li);
+
+        // El resto de tu código JavaScript existente
+        // ... (incluye aquí todo el código JavaScript que ya tenías)
+        // Variables para el arrastre
+        let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+    
+            // Evento para enviar mensajes
+            btnEnviar.addEventListener("click", function() {
+                const nombre = txtNombre.value.trim();
+                const mensaje = txtMensaje.value.trim();
+    
+                if (nombre && mensaje) {
+                    firebase.database().ref("chat").push({
+                        name: nombre,
+                        message: mensaje
+                    });
+                    txtMensaje.value = ''; // Limpiar solo el campo de mensaje
+                } else {
+                    alert("Por favor completa ambos campos.");
+                }
             });
-            chatUl.scrollTop = chatUl.scrollHeight; // Auto-scroll
+    
+            // Escuchar cambios en la base de datos y actualizar el chat
+            firebase.database().ref("chat").on("value", function(snapshot) {
+                let html = "";
+                snapshot.forEach(function (e) {
+                    const element = e.val();
+                    html += `<li><b>${element.name}: </b>${element.message}</li>`;
+                });
+                chatUl.innerHTML = html;
+                chatUl.scrollTop = chatUl.scrollHeight; // Auto-scroll al último mensaje
+            });
+    
+            // Funciones para hacer el chat arrastrable
+            chatContainer.addEventListener('mousedown', dragStart);
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('mousemove', drag);
+    
+            function dragStart(e) {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+    
+                if (e.target === chatContainer || e.target.closest('#chat-container')) {
+                    isDragging = true;
+                }
+            }
+    
+            function dragEnd(e) {
+                initialX = currentX;
+                initialY = currentY;
+    
+                isDragging = false;
+                keepChatInContainer();
+            }
+    
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+    
+                    xOffset = currentX;
+                    yOffset = currentY;
+    
+                    setTranslate(currentX, currentY, chatContainer);
+                }
+            }
+    
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+            }
+    
+            function keepChatInContainer() {
+                const containerRect = unityContainer.getBoundingClientRect();
+                const chatRect = chatContainer.getBoundingClientRect();
+    
+                if (chatRect.right > containerRect.right) {
+                    xOffset -= chatRect.right - containerRect.right;
+                }
+                if (chatRect.left < containerRect.left) {
+                    xOffset += containerRect.left - chatRect.left;
+                }
+                if (chatRect.bottom > containerRect.bottom) {
+                    yOffset -= chatRect.bottom - containerRect.bottom;
+                }
+                if (chatRect.top < containerRect.top) {
+                    yOffset += containerRect.top - chatRect.top;
+                }
+    
+                setTranslate(xOffset, yOffset, chatContainer);
+            }
+    
+            // Ajustar posición en pantalla completa
+            document.addEventListener('fullscreenchange', adjustChatPosition);
+    
+            function adjustChatPosition() {
+                if (document.fullscreenElement) {
+                    chatContainer.style.position = 'fixed';
+                    chatContainer.style.zIndex = '2147483647';
+                } else {
+                    chatContainer.style.position = 'absolute';
+                }
+                keepChatInContainer();
+            }
+    
+            // Mostrar/ocultar el formulario de chat
+            toggleChat.addEventListener('click', function() {
+                chatForm.style.display = chatForm.style.display === 'none' ? 'block' : 'none';
+            });
+    
+            // Mantener el chat dentro del contenedor al redimensionar la ventana
+            window.addEventListener('resize', keepChatInContainer);
+        </script>
+        <script>
+        document.addEventListener("fullscreenchange", () => {
+            const chat = document.getElementById("chat-container");
+            if (document.fullscreenElement) {
+                chat.style.zIndex = "999999999"; // Prioridad máxima
+                chat.style.position = "fixed";
+                chat.style.display = "block"; // Forzar visibilidad
+            } else {
+                chat.style.zIndex = "999999999";
+                chat.style.position = "fixed";
+                chat.style.display = "block";
+            }
         });
-
-        // Mostrar/ocultar formulario de chat
-        toggleChat.addEventListener('click', () => {
-            chatForm.style.display = chatForm.style.display === 'none' ? 'block' : 'none';
+    
+        // Forzar visibilidad inicial
+        window.addEventListener("load", () => {
+            const chat = document.getElementById("chat-container");
+            chat.style.zIndex = "999999999";
+            chat.style.position = "fixed";
         });
     </script>
 </body>
-</html>
-
 </html>
