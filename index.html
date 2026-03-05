@@ -188,7 +188,7 @@
             const nombre = txtNombre.value.trim() || "Anónimo";
             const mensaje = txtMensaje.value.trim();
             if (nombre && mensaje) {
-                fetch('https://apparatus-net-travel-registrar.trycloudflare.com/chat/send', {
+                fetch('https://devoted-obvious-assisted-exhibits.trycloudflare.com/chat/send', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({name: nombre, message: mensaje})
@@ -201,7 +201,7 @@
 
         // 🔥 RECIBIR CHAT GLOBAL (cada 2s)
         setInterval(function() {
-            fetch('https://apparatus-net-travel-registrar.trycloudflare.com/chat/messages')
+            fetch('https://devoted-obvious-assisted-exhibits.trycloudflare.com/chat/messages')
             .then(r=>r.json())
             .then(data=>{
                 let html = "";
