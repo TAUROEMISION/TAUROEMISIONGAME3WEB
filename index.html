@@ -188,7 +188,7 @@
             const nombre = txtNombre.value.trim() || "Anónimo";
             const mensaje = txtMensaje.value.trim();
             if (nombre && mensaje) {
-                fetch('https://bunch-open-lab-wines.trycloudflare.com/chat/send', {
+                fetch('https://somerset-routing-lincoln-pig.trycloudflare.com/chat/send', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({name: nombre, message: mensaje})
@@ -201,7 +201,7 @@
 
         // 🔥 RECIBIR CHAT GLOBAL (cada 2s)
         setInterval(function() {
-            fetch('https://bunch-open-lab-wines.trycloudflare.com/chat/messages')
+            fetch('https://somerset-routing-lincoln-pig.trycloudflare.com/chat/messages')
             .then(r=>r.json())
             .then(data=>{
                 let html = "";
