@@ -188,7 +188,7 @@
             const nombre = txtNombre.value.trim() || "Anónimo";
             const mensaje = txtMensaje.value.trim();
             if (nombre && mensaje) {
-                fetch('https://regulation-expo-appeals-wet.trycloudflare.com/chat/send', {
+                fetch('https://waiting-mirrors-potter-maternity.trycloudflare.com/chat/send', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({name: nombre, message: mensaje})
@@ -201,7 +201,7 @@
 
         // 🔥 RECIBIR CHAT GLOBAL (cada 2s)
         setInterval(function() {
-            fetch('https://regulation-expo-appeals-wet.trycloudflare.com/chat/messages')
+            fetch('https://waiting-mirrors-potter-maternity.trycloudflare.com/chat/messages')
             .then(r=>r.json())
             .then(data=>{
                 let html = "";
